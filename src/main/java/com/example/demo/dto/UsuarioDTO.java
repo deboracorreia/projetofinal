@@ -5,6 +5,8 @@
 package com.example.demo.dto;
 
 import com.example.demo.model.Usuario;
+import com.example.demo.utils.Sexo;
+import java.util.Date;
 
 /**
  *
@@ -28,12 +30,28 @@ public class UsuarioDTO {
     private String nomecontatoemergencia;
     private String senha;
     private String contatopreferencial;
-    
-    
-    public UsuarioDTO() {}
+
+    public UsuarioDTO(Long idusuario, String login, String cpf, String nomecompleto, Date datanascimento, Sexo sexo, String endereço, String cep, String cidade, String uf, String email, String celular, String contatoemergencia, String nomecontatoemergencia, String senha, String contatopreferencial) {
+        this.idusuario = idusuario;
+        this.login = login;
+        this.cpf = cpf;
+        this.nomecompleto = nomecompleto;
+        this.datanascimento = datanascimento;
+        this.sexo = sexo;
+        this.endereço = endereço;
+        this.cep = cep;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.email = email;
+        this.celular = celular;
+        this.contatoemergencia = contatoemergencia;
+        this.nomecontatoemergencia = nomecontatoemergencia;
+        this.senha = senha;
+        this.contatopreferencial = contatopreferencial;
+    }
 
     public UsuarioDTO(Usuario usuario) {
-        this.idusuario = usuario.getId();
+        this.idusuario = usuario.getIdusuario();
         this.login = usuario.getLogin();
     }
 

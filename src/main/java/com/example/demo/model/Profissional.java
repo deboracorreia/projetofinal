@@ -38,7 +38,7 @@ public class Profissional {
     private Boolean ativo;
 
     @Column(name = "datacadastro")
-    private LocalDate dataCadastro;
+    private LocalDate datacadastro;
 
     public Long getIdprofissional() {
         return idprofissional;
@@ -113,11 +113,11 @@ public class Profissional {
     }
 
     public LocalDate getDataCadastro() {
-        return dataCadastro;
+        return datacadastro;
     }
 
     public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
+        this.datacadastro = dataCadastro;
     }
 
 

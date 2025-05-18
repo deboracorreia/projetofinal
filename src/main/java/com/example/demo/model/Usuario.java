@@ -22,7 +22,7 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idusuario")
-    private Long id;
+    private Long idusuario;
 
     @Column(nullable = false, unique = true)
     private String login;
@@ -35,23 +35,25 @@ public class Usuario implements UserDetails {
     
     @Column(nullable = false, length = 11)
     private String cpf;
+    
+    private Pessoa pessoa;
 
     public Usuario() {
     }
 
-    public Usuario(Long id, String login, String senha, int tipo) {
-        this.id = id;
+    public Usuario(Long idusuario, String login, String senha, int tipo) {
+        this.idusuario = idusuario;
         this.login = login;
         this.senha = senha;
         this.tipo = tipo;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdusuario() {
+        return idusuario;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdusuario(Long idusuario) {
+        this.idusuario = idusuario;
     }
 
     public String getLogin() {

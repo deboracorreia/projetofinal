@@ -13,6 +13,11 @@ public class TratamentoResumoDTO {
     private Long idtratamento;
     private String nometratamento;
 
+    public TratamentoResumoDTO(Long idtratamento, String nometratamento) {
+        this.idtratamento = idtratamento;
+        this.nometratamento = nometratamento;
+    }
+    
     public Long getIdtratamento() {
         return idtratamento;
     }

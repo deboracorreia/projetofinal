@@ -20,6 +20,14 @@ public class AgendamentoDTO {
     private String descricao;
     private Long idtratamento;
 
+    public AgendamentoDTO(Long idagendamento, LocalDateTime datahorario, Long idusuario, String descricao, Long idtratamento) {
+        this.idagendamento = idagendamento;
+        this.datahorario = datahorario;
+        this.idusuario = idusuario;
+        this.descricao = descricao;
+        this.idtratamento = idtratamento;
+    }
+
     public Long getIdagendamento() {
         return idagendamento;
     }

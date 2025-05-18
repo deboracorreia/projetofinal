@@ -10,7 +10,6 @@ package com.example.demo.dto;
  */
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class AtendimentoDTO {
     private Long idatendimento;
@@ -18,6 +17,14 @@ public class AtendimentoDTO {
     private Long idprofissional;
     private String descricao;
     private LocalDate data;
+
+    public AtendimentoDTO(Long idatendimento, Long idagendamento, Long idprofissional, String descricao, LocalDate data) {
+        this.idatendimento = idatendimento;
+        this.idagendamento = idagendamento;
+        this.idprofissional = idprofissional;
+        this.descricao = descricao;
+        this.data = data;
+    }
 
     public Long getIdatendimento() {
         return idatendimento;

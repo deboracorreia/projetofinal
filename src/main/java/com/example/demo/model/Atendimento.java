@@ -34,7 +34,7 @@ public class Atendimento {
     
     private LocalDate data;
     
-    @OneToMany(mappedBy = "atendimento", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@OneToMany(mappedBy = "atendimento", cascade = CascadeType.ALL, orphanRemoval = true)
     /*private List<Agendamento> itens = new ArrayList<>();*/
     private LocalDate Data;
 

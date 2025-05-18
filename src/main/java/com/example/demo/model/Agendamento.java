@@ -34,8 +34,9 @@ public class Agendamento {
     @JoinColumn(name = "idTratamento")
     private Tratamento tratamento;
     
-    @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
     /*private List<Agendamento> itens = new ArrayList<>();*/
+    
     private LocalDateTime dataHorario;
 
     public Agendamento() {
