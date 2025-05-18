@@ -16,7 +16,9 @@ import java.util.Date;
 public class UsuarioDTO {
     private Long idusuario;
     private String login;
-    private String cpf;
+    private byte tipo;
+    
+    /*private String cpf;
     private String nomecompleto;
     private Date datanascimento;
     private Sexo sexo;
@@ -29,12 +31,15 @@ public class UsuarioDTO {
     private String contatoemergencia;
     private String nomecontatoemergencia;
     private String senha;
-    private String contatopreferencial;
+    private String contatopreferencial;*/
 
-    public UsuarioDTO(Long idusuario, String login, String cpf, String nomecompleto, Date datanascimento, Sexo sexo, String endereço, String cep, String cidade, String uf, String email, String celular, String contatoemergencia, String nomecontatoemergencia, String senha, String contatopreferencial) {
+    public UsuarioDTO(Long idusuario, String login, byte tipo) 
+//cpf, String nomecompleto, Date datanascimento, Sexo sexo, String endereço, String cep, String cidade, String uf, String email, String celular, String contatoemergencia, String nomecontatoemergencia, String senha, String contatopreferencial
+    {
         this.idusuario = idusuario;
         this.login = login;
-        this.cpf = cpf;
+        this.tipo = tipo;
+        /*this.cpf = cpf;
         this.nomecompleto = nomecompleto;
         this.datanascimento = datanascimento;
         this.sexo = sexo;
@@ -47,12 +52,14 @@ public class UsuarioDTO {
         this.contatoemergencia = contatoemergencia;
         this.nomecontatoemergencia = nomecontatoemergencia;
         this.senha = senha;
-        this.contatopreferencial = contatopreferencial;
+        this.contatopreferencial = contatopreferencial;*/
     }
 
     public UsuarioDTO(Usuario usuario) {
         this.idusuario = usuario.getIdusuario();
         this.login = usuario.getLogin();
+        //Pessoa pessoa = usuario.getPessoa()
+        //pessoa.getCpf()
     }
 
     public Long getIdusuario() {
