@@ -8,8 +8,6 @@ package com.example.demo.config;
  *
  * @author debora
  */
-
-
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,8 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain chain) throws ServletException, IOException {
+
+        // Liberar endpoints públicos (login, register)
+        String path = request.getServletPath();
+        if (path.startsWith("/api/auth/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         final String authHeader = request.getHeader("Authorization");
 
@@ -51,8 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     Usuario usuario = usuarioRepository.findByLogin(login).orElse(null);
 
                     if (usuario != null) {
-                        UsernamePasswordAuthenticationToken authToken =
-                                new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                        UsernamePasswordAuthenticationToken authToken
+                                = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                         SecurityContextHolder.getContext().setAuthentication(authToken);

@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.config.JwtAuthenticationFilter;
 import com.example.demo.config.MD5Util;
+import com.example.demo.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.List;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 @Configuration
 public class SecurityConfig {
@@ -60,7 +62,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config,
+            DaoAuthenticationProvider authenticationProvider) throws Exception {
+
+        var authManager = config.getAuthenticationManager();
+
+        return authManager;
     }
+    
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
 }

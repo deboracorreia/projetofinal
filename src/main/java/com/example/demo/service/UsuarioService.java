@@ -4,6 +4,10 @@
  */
 package com.example.demo.service;
 
+import com.example.demo.dto.UsuarioDTO;
+import com.example.demo.dto.UsuarioLoginDTO;
+import com.example.demo.dto.UsuarioLoginResponseDTO;
+import com.example.demo.model.Pessoa;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,16 +25,61 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    public UsuarioLoginResponseDTO cadastrar(UsuarioLoginDTO usuarioDTO) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByLogin(usuarioDTO.getLogin());
 
-    public Usuario cadastrar(Usuario usuario) {
+        if (usuarioExistente.isPresent()) {
+            throw new IllegalStateException("Login já existe: " + usuarioDTO.getLogin());
+        }
+
+        Usuario usuario = new Usuario(usuarioDTO);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        return usuarioRepository.save(usuario);
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        return new UsuarioLoginResponseDTO(usuarioSalvo);
     }
 
+    // Busca usuário por login (usado na autenticação)
     public Optional<Usuario> buscarPorUsername(String username) {
         return usuarioRepository.findByLogin(username);
     }
+
+    public UsuarioDTO buscarPorId(Long id) {
+        Optional<Usuario> optional = usuarioRepository.findByIdWithPessoa(id);
+        return optional.map(this::toDTO).orElse(null);
+    }
+
+    public UsuarioDTO toDTO(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
+
+        dto.setIdusuario(usuario.getIdusuario());
+        dto.setLogin(usuario.getLogin());
+        dto.setTipo(usuario.getTipo());
+
+        Pessoa p = usuario.getPessoa();
+        if (p != null) {
+            dto.setIdpessoa(p.getIdpessoa());
+            dto.setCpf(p.getCpf());
+            dto.setNomecompleto(p.getNomecompleto());
+            dto.setDatanascimento(p.getDatanascimento());
+            dto.setSexo(p.getSexo());
+            dto.setEndereco(p.getEndereco());
+            dto.setCep(p.getCep());
+            dto.setCidade(p.getCidade());
+            dto.setUf(p.getUf());
+            dto.setEmail(p.getEmail());
+            dto.setCelular(p.getCelular());
+            dto.setContatodeemergencia(p.getContatoemergencia());
+            dto.setNomecontatodeemergencia(p.getNomecontatoemergencia());
+            dto.setContatopreferencial(p.getContatopreferencial());
+        }
+
+        return dto;
+    }
+
 }

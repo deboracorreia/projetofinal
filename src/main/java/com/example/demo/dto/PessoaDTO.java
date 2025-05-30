@@ -18,7 +18,6 @@ public class PessoaDTO {
     private String nomecontatoemergencia;
     private String contatopreferencial;
 
-    // Getters e Setters
 
     public Long getIdpessoa() {
         return idpessoa;

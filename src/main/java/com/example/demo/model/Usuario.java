@@ -8,16 +8,19 @@ package com.example.demo.model;
  *
  * @author debora
  */
+import com.example.demo.dto.UsuarioDTO;
+import com.example.demo.dto.UsuarioLoginDTO;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario implements UserDetails {
+public class Usuario implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +35,13 @@ public class Usuario implements UserDetails {
 
     @Column(nullable = false)
     private int tipo;
-    
-    @Column(nullable = false, length = 11)
-    private String cpf;
-    
-    private Pessoa pessoa;
 
-    public Usuario() {
-    }
+    @OneToOne
+    @JoinColumn(name = "idpessoa", referencedColumnName = "idpessoa")
+    private Pessoa pessoa;
+    
+
+    public Usuario() {}
 
     public Usuario(Long idusuario, String login, String senha, int tipo) {
         this.idusuario = idusuario;
@@ -47,6 +49,15 @@ public class Usuario implements UserDetails {
         this.senha = senha;
         this.tipo = tipo;
     }
+    
+    public Usuario(UsuarioLoginDTO usuarioDto) {
+        this.idusuario = usuarioDto.getIdusuario();
+        this.login = usuarioDto.getLogin();
+        this.senha = usuarioDto.getSenha();
+        this.tipo = usuarioDto.getTipo();
+    }
+        
+    // Getters e Setters
 
     public Long getIdusuario() {
         return idusuario;
@@ -79,18 +90,22 @@ public class Usuario implements UserDetails {
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
+   
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Collections.emptyList(); // ou adicione papéis se quiser
-//    }
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
 
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> "ROLE_USER");
     }
-
-    @Override
+    
+        @Override
     public String getPassword() {
         return this.senha;
     }
@@ -119,13 +134,24 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    public String getCpf() {
-        return cpf;
+    
+    public String getRoleByTipo() {
+        if (this.tipo == 0) {
+            return "ROLE_ADMIN";
+        }
+        return "ROLE_USER";
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    
+    /*public Pessoa getPessoa() {
+        return pessoa;
     }
 
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
+    public String getUsername() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }*/
 }

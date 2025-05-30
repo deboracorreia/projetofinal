@@ -6,6 +6,7 @@ package com.example.demo.dto;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.utils.Sexo;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -14,53 +15,50 @@ import java.util.Date;
  */
 
 public class UsuarioDTO {
+
     private Long idusuario;
     private String login;
-    private byte tipo;
-    
-    /*private String cpf;
+    private int tipo;
+
+    private Long idpessoa;
+    private String cpf;
     private String nomecompleto;
-    private Date datanascimento;
-    private Sexo sexo;
-    private String endereço;
+    private LocalDate datanascimento;
+    private String sexo;
+    private String endereco;
     private String cep;
     private String cidade;
     private String uf;
     private String email;
     private String celular;
-    private String contatoemergencia;
-    private String nomecontatoemergencia;
-    private String senha;
-    private String contatopreferencial;*/
+    private String contatodeemergencia;
+    private String nomecontatodeemergencia;
+    private String contatopreferencial;
 
-    public UsuarioDTO(Long idusuario, String login, byte tipo) 
-//cpf, String nomecompleto, Date datanascimento, Sexo sexo, String endereço, String cep, String cidade, String uf, String email, String celular, String contatoemergencia, String nomecontatoemergencia, String senha, String contatopreferencial
-    {
-        this.idusuario = idusuario;
-        this.login = login;
-        this.tipo = tipo;
-        /*this.cpf = cpf;
-        this.nomecompleto = nomecompleto;
-        this.datanascimento = datanascimento;
-        this.sexo = sexo;
-        this.endereço = endereço;
-        this.cep = cep;
-        this.cidade = cidade;
-        this.uf = uf;
-        this.email = email;
-        this.celular = celular;
-        this.contatoemergencia = contatoemergencia;
-        this.nomecontatoemergencia = nomecontatoemergencia;
-        this.senha = senha;
-        this.contatopreferencial = contatopreferencial;*/
+    public UsuarioDTO() {
     }
 
     public UsuarioDTO(Usuario usuario) {
         this.idusuario = usuario.getIdusuario();
         this.login = usuario.getLogin();
-        //Pessoa pessoa = usuario.getPessoa()
-        //pessoa.getCpf()
-    }
+        this.tipo = usuario.getTipo();
+        if (usuario.getPessoa() != null) {
+            this.idpessoa = usuario.getPessoa().getIdpessoa();
+            this.cpf = usuario.getPessoa().getCpf();
+            this.nomecompleto = usuario.getPessoa().getNomecompleto();
+            this.datanascimento = usuario.getPessoa().getDatanascimento();
+            this.sexo = usuario.getPessoa().getSexo();
+            this.endereco = usuario.getPessoa().getEndereco();
+            this.cep = usuario.getPessoa().getCep();
+            this.cidade = usuario.getPessoa().getCidade();
+            this.uf = usuario.getPessoa().getUf();
+            this.email = usuario.getPessoa().getEmail();
+            this.celular = usuario.getPessoa().getCelular();
+            this.contatodeemergencia = usuario.getPessoa().getContatoemergencia();
+            this.nomecontatodeemergencia = usuario.getPessoa().getNomecontatoemergencia();
+            this.contatopreferencial = usuario.getPessoa().getContatopreferencial();
+        }
+    }    
 
     public Long getIdusuario() {
         return idusuario;
@@ -76,6 +74,22 @@ public class UsuarioDTO {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public Long getIdpessoa() {
+        return idpessoa;
+    }
+
+    public void setIdpessoa(Long idpessoa) {
+        this.idpessoa = idpessoa;
     }
 
     public String getCpf() {
@@ -94,28 +108,28 @@ public class UsuarioDTO {
         this.nomecompleto = nomecompleto;
     }
 
-    public Date getDatanascimento() {
+    public LocalDate getDatanascimento() {
         return datanascimento;
     }
 
-    public void setDatanascimento(Date datanascimento) {
+    public void setDatanascimento(LocalDate datanascimento) {
         this.datanascimento = datanascimento;
     }
 
-    public Sexo getSexo() {
+    public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(Sexo sexo) {
+    public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
-    public String getEndereço() {
-        return endereço;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setEndereço(String endereço) {
-        this.endereço = endereço;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public String getCep() {
@@ -158,28 +172,20 @@ public class UsuarioDTO {
         this.celular = celular;
     }
 
-    public String getContatoemergencia() {
-        return contatoemergencia;
+    public String getContatodeemergencia() {
+        return contatodeemergencia;
     }
 
-    public void setContatoemergencia(String contatoemergencia) {
-        this.contatoemergencia = contatoemergencia;
+    public void setContatodeemergencia(String contatodeemergencia) {
+        this.contatodeemergencia = contatodeemergencia;
     }
 
-    public String getNomecontatoemergencia() {
-        return nomecontatoemergencia;
+    public String getNomecontatodeemergencia() {
+        return nomecontatodeemergencia;
     }
 
-    public void setNomecontatoemergencia(String nomecontatoemergencia) {
-        this.nomecontatoemergencia = nomecontatoemergencia;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setNomecontatodeemergencia(String nomecontatodeemergencia) {
+        this.nomecontatodeemergencia = nomecontatodeemergencia;
     }
 
     public String getContatopreferencial() {
@@ -189,25 +195,5 @@ public class UsuarioDTO {
     public void setContatopreferencial(String contatopreferencial) {
         this.contatopreferencial = contatopreferencial;
     }
-
-
-
-
-   /* public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }*/
-
     
 }

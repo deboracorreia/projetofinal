@@ -10,17 +10,47 @@ package com.example.demo.controller;
  */
 
 import com.example.demo.model.Pessoa;
-import com.example.demo.dto.PessoaDTO;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.example.demo.repository.PessoaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/pessoa")
+@RequestMapping("/api/pessoas")
 public class PessoaController {
 
-    @GetMapping("/atual")
-    public PessoaDTO obterPessoaAtual(@AuthenticationPrincipal Pessoa pessoa) {
-        System.out.println("Pessoa autenticado: " + pessoa); // teste
-        return new PessoaDTO(pessoa);
+    @Autowired
+    private PessoaRepository pessoaRepository;
+
+    @GetMapping
+    public List<Pessoa> listarTodas() {
+        return pessoaRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Pessoa> buscarPorId(@PathVariable Long id) {
+        return pessoaRepository.findById(id);
+    }
+
+    @PostMapping
+    public Pessoa criar(@RequestBody Pessoa pessoa) {
+        return pessoaRepository.save(pessoa);
+    }
+
+    @PutMapping("/{id}")
+    public Pessoa atualizar(@PathVariable Long id, @RequestBody Pessoa pessoaAtualizada) {
+        return pessoaRepository.findById(id)
+                .map(pessoa -> {
+                    pessoaAtualizada.setIdpessoa(id);
+                    return pessoaRepository.save(pessoaAtualizada);
+                })
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        pessoaRepository.deleteById(id);
     }
 }

@@ -7,11 +7,15 @@ package com.example.demo.controller;
 import com.example.demo.config.JwtUtil;
 import com.example.demo.config.LoginRequest;
 import com.example.demo.config.MD5Util;
+import com.example.demo.dto.UsuarioDTO;
+import com.example.demo.dto.UsuarioLoginDTO;
+import com.example.demo.dto.UsuarioLoginResponseDTO;
 import com.example.demo.model.Usuario;
 import com.example.demo.service.UsuarioService;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +60,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Usuario> registrar(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.cadastrar(usuario));
+    public ResponseEntity<?> registrar(@RequestBody UsuarioLoginDTO usuarioDto) {
+        try {
+            UsuarioLoginResponseDTO novoUsuario = usuarioService.cadastrar(usuarioDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of(
+                        "message", ex.getMessage(),
+                        "field", "login",
+                        "status", 409
+                    ));
+        }
     }
 }
