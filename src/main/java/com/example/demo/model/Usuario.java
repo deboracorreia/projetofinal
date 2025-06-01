@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name = "usuario")
@@ -102,7 +103,8 @@ public class Usuario implements UserDetails{
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_USER");
+        String role = this.getRoleByTipo();
+        return List.of(new SimpleGrantedAuthority("ROLE_"+ role));
     }
     
         @Override
@@ -137,9 +139,9 @@ public class Usuario implements UserDetails{
     
     public String getRoleByTipo() {
         if (this.tipo == 0) {
-            return "ROLE_ADMIN";
+            return "ADMIN";
         }
-        return "ROLE_USER";
+        return "USER";
     }
 
     
