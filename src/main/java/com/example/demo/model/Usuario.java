@@ -11,6 +11,7 @@ package com.example.demo.model;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.dto.UsuarioLoginDTO;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -38,7 +39,7 @@ public class Usuario implements UserDetails{
     private int tipo;
 
     @OneToOne
-    @JoinColumn(name = "idpessoa", referencedColumnName = "idpessoa")
+    @JoinColumn(name = "idpessoa", referencedColumnName = "idpessoa", nullable = true)
     private Pessoa pessoa;
     
 
@@ -56,6 +57,31 @@ public class Usuario implements UserDetails{
         this.login = usuarioDto.getLogin();
         this.senha = usuarioDto.getSenha();
         this.tipo = usuarioDto.getTipo();
+    }
+    
+    public Usuario(UsuarioDTO usuarioDto) {
+        this.idusuario = usuarioDto.getIdusuario();
+        this.login = usuarioDto.getLogin();
+        this.tipo = usuarioDto.getTipo();
+        Pessoa pessoa = new Pessoa();
+        pessoa.setIdpessoa(usuarioDto.getIdpessoa());
+        pessoa.setCpf(usuarioDto.getCpf());
+        pessoa.setNomecompleto(usuarioDto.getNomecompleto());
+        pessoa.setDatanascimento(usuarioDto.getDatanascimento());
+        pessoa.setSexo(usuarioDto.getSexo());
+        pessoa.setEndereco(usuarioDto.getEndereco());
+        pessoa.setCep(usuarioDto.getCep());
+        pessoa.setCidade(usuarioDto.getCidade());
+        pessoa.setUf(usuarioDto.getUf());
+        pessoa.setEmail(usuarioDto.getEmail());
+        pessoa.setCelular(usuarioDto.getCelular());
+        pessoa.setContatoemergencia(usuarioDto.getContatodeemergencia());
+        pessoa.setNomecontatoemergencia(usuarioDto.getNomecontatodeemergencia());
+        pessoa.setContatopreferencial(usuarioDto.getContatopreferencial());
+    }
+
+    public Usuario(Long idusuario) {
+        this.idusuario = idusuario;
     }
         
     // Getters e Setters

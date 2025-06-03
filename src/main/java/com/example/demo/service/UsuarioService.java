@@ -10,6 +10,7 @@ import com.example.demo.dto.UsuarioLoginResponseDTO;
 import com.example.demo.model.Pessoa;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
+import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,26 @@ public class UsuarioService {
         }
 
         return dto;
+    }
+
+    public List<Usuario> buscarTodos() {
+        return usuarioRepository.findAll();
+    }
+
+    public void excluir(Long id) {
+        usuarioRepository.delete(new Usuario(id));
+    }
+
+    public Usuario salvar(UsuarioLoginDTO usuarioLoginDto) {
+        return usuarioRepository.saveAndFlush(new Usuario(usuarioLoginDto));
+    }
+
+    public Usuario atualizar(Long id, UsuarioDTO usuarioDTO) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+        usuario.setLogin(usuarioDTO.getLogin());
+        usuario.setTipo(usuarioDTO.getTipo());
+        return usuarioRepository.saveAndFlush(usuario);
     }
 
 }
