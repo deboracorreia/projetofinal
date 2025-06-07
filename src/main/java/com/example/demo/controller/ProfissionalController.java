@@ -28,6 +28,7 @@ public class ProfissionalController {
     @GetMapping
     public ResponseEntity<List<Profissional>> listarProfissional() {
         return ResponseEntity.ok(profissionalService.listarTodos());
+        
     }
 
     @GetMapping("/{idprofissional}")

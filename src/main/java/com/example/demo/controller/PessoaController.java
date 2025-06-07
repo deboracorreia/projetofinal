@@ -9,49 +9,53 @@ package com.example.demo.controller;
  * @author debora
  */
 
+import com.example.demo.dto.PessoaDTO;
 import com.example.demo.model.Pessoa;
-import com.example.demo.repository.PessoaRepository;
 import com.example.demo.service.PessoaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/pessoas")
 public class PessoaController {
 
     @Autowired
-    private PessoaService pessoaService; // Criar ServicePessoa e substituir esse PessoaRepository pelo PessoaService, não se usa repository no controller
-
-    @GetMapping
-    public List<Pessoa> listarTodas() {
-        return pessoaService.listarTodos();
-    }
+    private PessoaService pessoaService;
 
     @GetMapping("/{id}")
-    public Optional<Pessoa> buscarPorId(@PathVariable Long id) {
-        return pessoaService.buscarPorIdpessoa(id);
+    public PessoaDTO buscarPorId(@PathVariable Long id) {
+        return pessoaService.buscarPorId(id);
+    }
+
+    @GetMapping("/atual")
+    public PessoaDTO obterPessoaAtual(@AuthenticationPrincipal Pessoa pessoa){
+        System.out.println("Pessoa autenticada: " + pessoa);
+        return new PessoaDTO(pessoa);
+    }
+
+    @GetMapping
+    public List<PessoaDTO> buscarTodos() {
+        List<Pessoa> pessoas = pessoaService.buscarTodos();
+        return pessoas.stream().map(PessoaDTO::new).toList();
     }
 
     @PostMapping
-    public Pessoa criar(@RequestBody Pessoa pessoa) {
-        //return pessoaService.save(pessoa);
+    public PessoaDTO criar(@RequestBody PessoaDTO pessoaDTO) {
+        Pessoa pessoa = pessoaService.salvar(pessoaDTO);
+        return new PessoaDTO(pessoa);
     }
 
     @PutMapping("/{id}")
-    public Pessoa atualizar(@PathVariable Long id, @RequestBody Pessoa pessoaAtualizada) {
-        //return pessoa.findById(id)
-        //        .map(pessoa -> {
-        //            pessoaAtualizada.setIdpessoa(id);
-        ///            return pessoaRepository.save(pessoaAtualizada);
-        //        })
-        //        .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+    public PessoaDTO atualizar(@PathVariable Long id, @RequestBody PessoaDTO pessoaDTO) {
+        pessoaDTO.setIdpessoa(id);
+        Pessoa pessoaAtualizada = pessoaService.atualizar(id, pessoaDTO);
+        return new PessoaDTO(pessoaAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public void excluir(@PathVariable Long id) {
         pessoaService.excluir(id);
     }
 }

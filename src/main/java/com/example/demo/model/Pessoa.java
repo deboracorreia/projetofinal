@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "pessoa")
 public class Pessoa {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idpessoa")
@@ -53,6 +54,11 @@ public class Pessoa {
     @Column(length = 12)
     private String contatopreferencial;
 
+        
+    @OneToOne
+    @JoinColumn(name = "idusuario", nullable = true) //pode ser null
+    private Usuario usuario;    
+    
     public Pessoa() {
     }
 
@@ -173,5 +179,14 @@ public class Pessoa {
     public void setContatopreferencial(String contatopreferencial) {
         this.contatopreferencial = contatopreferencial;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
 
 }

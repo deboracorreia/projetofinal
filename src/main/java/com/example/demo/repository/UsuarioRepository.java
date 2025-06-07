@@ -20,8 +20,5 @@ import org.springframework.stereotype.Repository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
-    @Query("select u from Usuario u left join u.pessoa p where u.idusuario = :id")
-    Optional<Usuario> findByIdWithPessoa(@Param("id") Long id);
-
     Optional<Usuario> findByLogin(String login);
 }

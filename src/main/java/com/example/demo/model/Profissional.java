@@ -22,23 +22,34 @@ public class Profissional {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idprofissional")
     private Long idprofissional;
-
-    @ManyToOne
-    @JoinColumn(name = "idusuario", nullable = false)
-    private Usuario usuario;
-
-    private String nome;
-    private String email;
-    private String telefone;
-
     private String especialidade;
     private String cro;
-
     private String estadocro;
     private Boolean ativo;
-
+    @ManyToOne
+    
+    @JoinColumn(name = "idusuario", nullable = false)
+    private Usuario usuario;
+    
     @Column(name = "datacadastro")
     private LocalDate datacadastro;
+
+
+    public Profissional() {
+    }
+
+    public Profissional(Long idprofissional, String especialidade, String cro, String estadocro, Boolean ativo, Usuario usuario, LocalDate datacadastro) {
+        this.idprofissional = idprofissional;
+        this.especialidade = especialidade;
+        this.cro = cro;
+        this.estadocro = estadocro;
+        this.ativo = ativo;
+        this.usuario = usuario;
+        this.datacadastro = datacadastro;
+    }
+
+
+    
 
     public Long getIdprofissional() {
         return idprofissional;
@@ -55,31 +66,6 @@ public class Profissional {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
     public String getEspecialidade() {
         return especialidade;
     }

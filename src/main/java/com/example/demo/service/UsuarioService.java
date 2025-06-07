@@ -51,7 +51,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO buscarPorId(Long id) {
-        Optional<Usuario> optional = usuarioRepository.findByIdWithPessoa(id);
+        Optional<Usuario> optional = usuarioRepository.findById(id);
         return optional.map(this::toDTO).orElse(null);
     }
 
@@ -62,23 +62,6 @@ public class UsuarioService {
         dto.setLogin(usuario.getLogin());
         dto.setTipo(usuario.getTipo());
 
-        Pessoa p = usuario.getPessoa();
-        if (p != null) {
-            dto.setIdpessoa(p.getIdpessoa());
-            dto.setCpf(p.getCpf());
-            dto.setNomecompleto(p.getNomecompleto());
-            dto.setDatanascimento(p.getDatanascimento());
-            dto.setSexo(p.getSexo());
-            dto.setEndereco(p.getEndereco());
-            dto.setCep(p.getCep());
-            dto.setCidade(p.getCidade());
-            dto.setUf(p.getUf());
-            dto.setEmail(p.getEmail());
-            dto.setCelular(p.getCelular());
-            dto.setContatodeemergencia(p.getContatoemergencia());
-            dto.setNomecontatodeemergencia(p.getNomecontatoemergencia());
-            dto.setContatopreferencial(p.getContatopreferencial());
-        }
 
         return dto;
     }

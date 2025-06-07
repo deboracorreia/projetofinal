@@ -38,10 +38,6 @@ public class Usuario implements UserDetails{
     @Column(nullable = false)
     private int tipo;
 
-    @OneToOne
-    @JoinColumn(name = "idpessoa", referencedColumnName = "idpessoa", nullable = true)
-    private Pessoa pessoa;
-    
 
     public Usuario() {}
 
@@ -63,21 +59,7 @@ public class Usuario implements UserDetails{
         this.idusuario = usuarioDto.getIdusuario();
         this.login = usuarioDto.getLogin();
         this.tipo = usuarioDto.getTipo();
-        Pessoa pessoa = new Pessoa();
-        pessoa.setIdpessoa(usuarioDto.getIdpessoa());
-        pessoa.setCpf(usuarioDto.getCpf());
-        pessoa.setNomecompleto(usuarioDto.getNomecompleto());
-        pessoa.setDatanascimento(usuarioDto.getDatanascimento());
-        pessoa.setSexo(usuarioDto.getSexo());
-        pessoa.setEndereco(usuarioDto.getEndereco());
-        pessoa.setCep(usuarioDto.getCep());
-        pessoa.setCidade(usuarioDto.getCidade());
-        pessoa.setUf(usuarioDto.getUf());
-        pessoa.setEmail(usuarioDto.getEmail());
-        pessoa.setCelular(usuarioDto.getCelular());
-        pessoa.setContatoemergencia(usuarioDto.getContatodeemergencia());
-        pessoa.setNomecontatoemergencia(usuarioDto.getNomecontatodeemergencia());
-        pessoa.setContatopreferencial(usuarioDto.getContatopreferencial());
+        
     }
 
     public Usuario(Long idusuario) {
@@ -118,14 +100,6 @@ public class Usuario implements UserDetails{
         this.tipo = tipo;
     }
    
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -170,16 +144,4 @@ public class Usuario implements UserDetails{
         return "USER";
     }
 
-    
-    /*public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    public String getUsername() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }*/
 }
