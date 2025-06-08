@@ -1,30 +1,49 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.repository;
 
-/**
- *
- * @author debora
- */
-
-import com.example.demo.dto.ProfissionalResumoDTO;
 import com.example.demo.model.Profissional;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProfissionalRepository extends JpaRepository<Profissional, Long> {
-    Optional<Profissional> findById(Long id);
 
-    @Query("""
-           select new com.example.demo.dto.ProfissionalResumoDTO(p.idprofissional, user.idusuario, p.especialidade, p.cro, p.estadocro, p.ativo, p.datacadastro) 
-           from Profissional p
-           join p.usuario user
-           where idprofissional = ?1
-           """)
-    ProfissionalResumoDTO findProfissionalById(Long id);
+    // Buscar por usuário
+    Optional<Profissional> findByUsuario_Idusuario(Long idusuario);
+
+    // Verificar se usuário já tem profissional
+    boolean existsByUsuario_Idusuario(Long idusuario);
+
+    boolean existsByUsuario_IdusuarioAndIdprofissionalNot(Long idusuario, Long idprofissional);
+
+    // Buscar por especialidade
+    List<Profissional> findByEspecialidadeContainingIgnoreCase(String especialidade);
+
+    // Buscar por status (ativo/inativo)
+    List<Profissional> findByAtivo(Boolean ativo);
+
+    // Contar por status
+    long countByAtivo(Boolean ativo);
+
+    // Buscar por estado do CRO
+    List<Profissional> findByEstadocroIgnoreCase(String estadocro);
+
+    // Verificar CRO existente
+    boolean existsByCroAndEstadocro(String cro, String estadocro);
+
+    boolean existsByCroAndEstadocroAndIdprofissionalNot(String cro, String estadocro, Long idprofissional);
+
+    // Buscar por CRO
+    List<Profissional> findByCroContainingIgnoreCase(String cro);
+
+    // Buscar profissionais sem usuário
+    List<Profissional> findByUsuarioIsNull();
+
+    // Buscar todos ordenados por especialidade
+    List<Profissional> findAllByOrderByEspecialidadeAsc();
+
+    // Buscar ativos ordenados por especialidade
+    List<Profissional> findByAtivoOrderByEspecialidadeAsc(Boolean ativo);
 }

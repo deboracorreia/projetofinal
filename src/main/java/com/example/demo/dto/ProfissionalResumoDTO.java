@@ -4,26 +4,34 @@
  */
 package com.example.demo.dto;
 
+import com.example.demo.model.Profissional;
+
 import java.time.LocalDate;
 
 /**
- *
  * @author debora
  */
-    
+
 public class ProfissionalResumoDTO {
-    
+
     private Long idprofissional;
     private Long idusuario;
+    private String loginUsuario; // Adicionado para mostrar na tabela
     private String especialidade;
     private String cro;
     private String estadocro;
     private boolean ativo;
-    private LocalDate datacadastro;    
+    private LocalDate datacadastro;
 
-    public ProfissionalResumoDTO(Long idprofissional, Long idusuario, String especialidade, String cro, String estadocro, boolean ativo, LocalDate datacadastro) {
+    // Construtor vazio
+    public ProfissionalResumoDTO() {
+    }
+
+    // Construtor completo
+    public ProfissionalResumoDTO(Long idprofissional, Long idusuario, String loginUsuario, String especialidade, String cro, String estadocro, boolean ativo, LocalDate datacadastro) {
         this.idprofissional = idprofissional;
         this.idusuario = idusuario;
+        this.loginUsuario = loginUsuario;
         this.especialidade = especialidade;
         this.cro = cro;
         this.estadocro = estadocro;
@@ -31,6 +39,33 @@ public class ProfissionalResumoDTO {
         this.datacadastro = datacadastro;
     }
 
+    // Construtor a partir da entidade Profissional
+    public ProfissionalResumoDTO(Profissional profissional) {
+        this.idprofissional = profissional.getIdprofissional();
+        this.idusuario = profissional.getUsuario() != null ? profissional.getUsuario().getIdusuario() : null;
+        this.loginUsuario = profissional.getUsuario() != null ? profissional.getUsuario().getLogin() : null;
+        this.especialidade = profissional.getEspecialidade();
+        this.cro = profissional.getCro();
+        this.estadocro = profissional.getEstadocro();
+        this.ativo = profissional.getAtivo(); // Agora usa Boolean diretamente
+        this.datacadastro = profissional.getDatacadastro();
+    }
+
+    // Método para converter DTO para entidade
+    public Profissional toEntity() {
+        Profissional profissional = new Profissional();
+        profissional.setIdprofissional(this.idprofissional);
+        profissional.setEspecialidade(this.especialidade);
+        profissional.setCro(this.cro);
+        profissional.setEstadocro(this.estadocro);
+        profissional.setAtivo(this.ativo); // Agora usa Boolean diretamente
+        profissional.setDatacadastro(this.datacadastro);
+
+        // O usuário será setado no service
+        return profissional;
+    }
+
+    // Getters e Setters
     public Long getIdprofissional() {
         return idprofissional;
     }
@@ -45,6 +80,14 @@ public class ProfissionalResumoDTO {
 
     public void setIdusuario(Long idusuario) {
         this.idusuario = idusuario;
+    }
+
+    public String getLoginUsuario() {
+        return loginUsuario;
+    }
+
+    public void setLoginUsuario(String loginUsuario) {
+        this.loginUsuario = loginUsuario;
     }
 
     public String getEspecialidade() {
@@ -86,5 +129,18 @@ public class ProfissionalResumoDTO {
     public void setDatacadastro(LocalDate datacadastro) {
         this.datacadastro = datacadastro;
     }
-    
+
+    @Override
+    public String toString() {
+        return "ProfissionalResumoDTO{" +
+                "idprofissional=" + idprofissional +
+                ", idusuario=" + idusuario +
+                ", loginUsuario='" + loginUsuario + '\'' +
+                ", especialidade='" + especialidade + '\'' +
+                ", cro='" + cro + '\'' +
+                ", estadocro='" + estadocro + '\'' +
+                ", ativo=" + ativo +
+                ", datacadastro=" + datacadastro +
+                '}';
+    }
 }

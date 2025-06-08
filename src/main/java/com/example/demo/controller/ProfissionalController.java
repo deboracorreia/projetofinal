@@ -5,11 +5,10 @@
 package com.example.demo.controller;
 
 /**
- *
  * @author debora
  */
 
-import com.example.demo.model.Profissional;
+import com.example.demo.dto.ProfissionalResumoDTO;
 import com.example.demo.service.ProfissionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,37 +25,121 @@ public class ProfissionalController {
     private ProfissionalService profissionalService;
 
     @GetMapping
-    public ResponseEntity<List<Profissional>> listarProfissional() {
-        return ResponseEntity.ok(profissionalService.listarTodos());
-        
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarProfissional() {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.listarTodosDTO();
+        return ResponseEntity.ok(profissionais);
     }
 
     @GetMapping("/{idprofissional}")
-    public ResponseEntity<Profissional> buscarProfissional(@PathVariable Long idprofissional) {
-        Optional<Profissional> profissional = profissionalService.buscarPorIdprofissional(idprofissional);
+    public ResponseEntity<ProfissionalResumoDTO> buscarProfissional(@PathVariable Long idprofissional) {
+        Optional<ProfissionalResumoDTO> profissional = profissionalService.buscarPorIdprofissionalDTO(idprofissional);
         return profissional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Profissional> criarProfissional(@RequestBody Profissional profissional) {
-        return ResponseEntity.ok(profissionalService.salvar(profissional));
+    public ResponseEntity<?> criarProfissional(@RequestBody ProfissionalResumoDTO profissionalDTO) {
+        try {
+            ProfissionalResumoDTO novoProfissional = profissionalService.salvarDTO(profissionalDTO);
+            return ResponseEntity.ok(novoProfissional);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
     }
 
     @PutMapping("/{idprofissional}")
-    public ResponseEntity<Profissional> atualizarProfissional(@PathVariable Long idprofissional, @RequestBody Profissional profissional) {
-        if (!profissionalService.buscarPorIdprofissional(idprofissional).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> atualizarProfissional(@PathVariable Long idprofissional, @RequestBody ProfissionalResumoDTO profissionalDTO) {
+        try {
+            profissionalDTO.setIdprofissional(idprofissional);
+            ProfissionalResumoDTO profissionalAtualizado = profissionalService.salvarDTO(profissionalDTO);
+            return ResponseEntity.ok(profissionalAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
-        profissional.setId(idprofissional);
-        return ResponseEntity.ok(profissionalService.salvar(profissional));
     }
 
     @DeleteMapping("/{idprofissional}")
     public ResponseEntity<Void> excluirProfissional(@PathVariable Long idprofissional) {
-        if (!profissionalService.buscarPorIdprofissional(idprofissional).isPresent()) {
-            return ResponseEntity.notFound().build();
+        try {
+            profissionalService.excluir(idprofissional);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
         }
-        profissionalService.excluir(idprofissional);
-        return ResponseEntity.noContent().build();
+    }
+
+    // Novos endpoints úteis
+
+    @GetMapping("/usuario/{idusuario}")
+    public ResponseEntity<ProfissionalResumoDTO> buscarProfissionalPorUsuario(@PathVariable Long idusuario) {
+        Optional<ProfissionalResumoDTO> profissional = profissionalService.buscarPorUsuarioDTO(idusuario);
+        return profissional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/especialidade/{especialidade}")
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarPorEspecialidade(@PathVariable String especialidade) {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.buscarPorEspecialidadeDTO(especialidade);
+        return ResponseEntity.ok(profissionais);
+    }
+
+    @GetMapping("/ativos")
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarProfissionaisAtivos() {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.buscarAtivosDTO();
+        return ResponseEntity.ok(profissionais);
+    }
+
+    @GetMapping("/inativos")
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarProfissionaisInativos() {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.buscarInativosDTO();
+        return ResponseEntity.ok(profissionais);
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarPorEstadoCRO(@PathVariable String estado) {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.buscarPorEstadoCRODTO(estado);
+        return ResponseEntity.ok(profissionais);
+    }
+
+    @GetMapping("/verificar-cro")
+    public ResponseEntity<Boolean> verificarCROExistente(
+            @RequestParam String cro,
+            @RequestParam String estadocro,
+            @RequestParam(required = false) Long excludeId) {
+        boolean existe = profissionalService.existeCRO(cro, estadocro, excludeId);
+        return ResponseEntity.ok(existe);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> contarProfissionais() {
+        long total = profissionalService.contarTodos();
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/count/ativos")
+    public ResponseEntity<Long> contarProfissionaisAtivos() {
+        long total = profissionalService.contarAtivos();
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/sem-usuario")
+    public ResponseEntity<List<ProfissionalResumoDTO>> listarProfissionaisSemUsuario() {
+        List<ProfissionalResumoDTO> profissionais = profissionalService.buscarSemUsuarioDTO();
+        return ResponseEntity.ok(profissionais);
+    }
+
+    // Classe interna para respostas de erro
+    public static class ErrorResponse {
+        private String message;
+
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 }

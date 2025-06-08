@@ -5,12 +5,12 @@
 package com.example.demo.model;
 
 /**
- *
  * @author debora
  */
 
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 
@@ -27,10 +27,10 @@ public class Profissional {
     private String estadocro;
     private Boolean ativo;
     @ManyToOne
-    
+
     @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
-    
+
     @Column(name = "datacadastro")
     private LocalDate datacadastro;
 
@@ -49,13 +49,11 @@ public class Profissional {
     }
 
 
-    
-
     public Long getIdprofissional() {
         return idprofissional;
     }
 
-    public void setId(Long idprofissional) {
+    public void setIdprofissional(Long idprofissional) {
         this.idprofissional = idprofissional;
     }
 
@@ -66,6 +64,7 @@ public class Profissional {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
     public String getEspecialidade() {
         return especialidade;
     }
@@ -98,14 +97,13 @@ public class Profissional {
         this.ativo = ativo;
     }
 
-    public LocalDate getDataCadastro() {
+    public LocalDate getDatacadastro() {
         return datacadastro;
     }
 
-    public void setDataCadastro(LocalDate dataCadastro) {
+    public void setDatacadastro(LocalDate dataCadastro) {
         this.datacadastro = dataCadastro;
     }
-
 
 
 }
