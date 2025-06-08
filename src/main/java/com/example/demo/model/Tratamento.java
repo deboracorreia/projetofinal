@@ -7,40 +7,55 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 /**
- *
- * @author debor
+ * Entidade que representa um Tratamento
+ * @author debora
  */
-
 @Entity
 @Table(name = "tratamento")
 public class Tratamento {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 255)
+    @Column(name = "idtratamento")
+    private Long idtratamento;
+    
+    @Column(nullable = false, length = 100, unique = true)
     private String nometratamento;
-
-    public Tratamento(Long id, String nometratamento) {
-        this.id = id;
-        this.nometratamento = nometratamento;
+    
+    // Construtor padrão
+    public Tratamento() {
     }
-
-    public Long getId() {
-        return id;
+    
+    // Construtor com ID
+    public Tratamento(Long idtratamento) {
+        this.idtratamento = idtratamento;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNometratamento() {
-        return nometratamento;
-    }
-
-    public void setNometratamento(String nometratamento) {
+    
+    // Construtor com nome
+    public Tratamento(String nometratamento) {
         this.nometratamento = nometratamento;
     }
     
+    // Construtor completo
+    public Tratamento(Long idtratamento, String nometratamento) {
+        this.idtratamento = idtratamento;
+        this.nometratamento = nometratamento;
+    }
+    
+    // Getters e Setters
+    public Long getIdtratamento() {
+        return idtratamento;
+    }
+    
+    public void setIdtratamento(Long idtratamento) {
+        this.idtratamento = idtratamento;
+    }
+    
+    public String getNometratamento() {
+        return nometratamento;
+    }
+    
+    public void setNometratamento(String nometratamento) {
+        this.nometratamento = nometratamento;
+    }
 }
