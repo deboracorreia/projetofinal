@@ -5,12 +5,10 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDateTime;
 
 /**
- *
  * @author debora
  */
 @Entity
@@ -21,35 +19,49 @@ public class Atendimento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idatendimento;
 
-
-    @ManyToOne
-    @JoinColumn(name = "idagendamento")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idagendamento", nullable = false)
     private Agendamento agendamento;
-     
-    @ManyToOne
-    @JoinColumn(name = "idprofissional")
-    private Profissional profissional;
-    
-    private String descricao;
-    
-    private LocalDate data;
-    
-    //@OneToMany(mappedBy = "atendimento", cascade = CascadeType.ALL, orphanRemoval = true)
-    /*private List<Agendamento> itens = new ArrayList<>();*/
-    private LocalDate Data;
 
+    @Column(name = "descricao", columnDefinition = "TEXT")
+    private String descricao;
+
+    @Column(name = "data", nullable = false)
+    private LocalDateTime data;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusAtendimento status;
+
+    // Enum para status do atendimento
+    public enum StatusAtendimento {
+        EM_ANDAMENTO("Em Andamento"),
+        CANCELADO("Cancelado"),
+        CONCLUIDO("Concluído");
+
+        private final String descricao;
+
+        StatusAtendimento(String descricao) {
+            this.descricao = descricao;
+        }
+
+        public String getDescricao() {
+            return descricao;
+        }
+    }
+
+    // Construtores
     public Atendimento() {
     }
 
-    public Atendimento(Long idatendimento,  Agendamento agendamento, Profissional profissional, String descricao, LocalDate data) {
-        this.idatendimento = idatendimento;
+    public Atendimento(Agendamento agendamento, String descricao, LocalDateTime data, StatusAtendimento status) {
         this.agendamento = agendamento;
-        this.profissional = profissional;
         this.descricao = descricao;
         this.data = data;
-
+        this.status = status;
     }
 
+    // Getters e Setters
     public Long getIdatendimento() {
         return idatendimento;
     }
@@ -66,14 +78,6 @@ public class Atendimento {
         this.agendamento = agendamento;
     }
 
-    public Profissional getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(Profissional profissional) {
-        this.profissional = profissional;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -82,14 +86,30 @@ public class Atendimento {
         this.descricao = descricao;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
-  
-    
+    public StatusAtendimento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAtendimento status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Atendimento{" +
+                "idatendimento=" + idatendimento +
+                ", agendamento=" + (agendamento != null ? agendamento.getIdagendamento() : null) +
+                ", descricao='" + descricao + '\'' +
+                ", data=" + data +
+                ", status=" + status +
+                '}';
+    }
 }

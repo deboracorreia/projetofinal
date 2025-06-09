@@ -5,18 +5,17 @@
     package com.example.demo.controller;
 
     /**
-     *
      * @author debora
      */
 
     import com.example.demo.dto.UsuarioDTO;
-    import com.example.demo.dto.UsuarioLoginDTO;
     import com.example.demo.model.Usuario;
     import com.example.demo.service.UsuarioService;
-    import java.util.List;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.security.core.annotation.AuthenticationPrincipal;
     import org.springframework.web.bind.annotation.*;
+
+    import java.util.List;
 
     @RestController
     @RequestMapping("/api/usuarios")
@@ -31,21 +30,15 @@
         }
 
         @GetMapping("/atual")
-        public UsuarioDTO obterUsuarioAtual (@AuthenticationPrincipal Usuario usuario){
+        public UsuarioDTO obterUsuarioAtual(@AuthenticationPrincipal Usuario usuario) {
             System.out.println("Usuário autenticado: " + usuario);
-            return new UsuarioDTO (usuario);
+            return new UsuarioDTO(usuario);
         }
 
         @GetMapping
-        public List<UsuarioDTO> buscarTodos () {
-            List<Usuario>usuarios = usuarioService.buscarTodos();
+        public List<UsuarioDTO> buscarTodos() {
+            List<Usuario> usuarios = usuarioService.buscarTodos();
             return usuarios.stream().map(UsuarioDTO::new).toList();
-        }
-
-        @PostMapping
-        public UsuarioDTO criar(@RequestBody UsuarioLoginDTO usuarioLoginDto) {
-            Usuario usuario = usuarioService.salvar(usuarioLoginDto);
-            return new UsuarioDTO(usuario);
         }
 
         @PutMapping("/{id}")
@@ -59,6 +52,6 @@
         public void excluir(@PathVariable Long id) {
             usuarioService.excluir(id);
         }
-}
+    }
 
  

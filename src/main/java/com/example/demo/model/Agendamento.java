@@ -5,13 +5,10 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- *
  * @author debora
  */
 @Entity
@@ -22,34 +19,37 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idagendamento;
 
+    @Column(name = "datahorario", nullable = false)
     private LocalDateTime datahorario;
 
-    @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    @Column(name = "descricao")
+    private String descricao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idusuario", nullable = false)
     private Usuario usuario;
 
-     private String descricao;
-     
-    @ManyToOne
-    @JoinColumn(name = "idTratamento")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idtratamento")
     private Tratamento tratamento;
-    
-    //@OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL, orphanRemoval = true)
-    /*private List<Agendamento> itens = new ArrayList<>();*/
-    
-    private LocalDateTime dataHorario;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idprofissional", nullable = false)
+    private Profissional profissional;
+
+    // Construtores
     public Agendamento() {
     }
 
-    public Agendamento(Long idagendamento, LocalDateTime datahorario, Usuario usuario, String descricao, Tratamento tratamento) {
-        this.idagendamento = idagendamento;
-        this.dataHorario = datahorario;
-        this.usuario = usuario;
+    public Agendamento(LocalDateTime datahorario, String descricao, Usuario usuario, Tratamento tratamento, Profissional profissional) {
+        this.datahorario = datahorario;
         this.descricao = descricao;
+        this.usuario = usuario;
         this.tratamento = tratamento;
+        this.profissional = profissional;
     }
 
+    // Getters e Setters
     public Long getIdagendamento() {
         return idagendamento;
     }
@@ -58,20 +58,12 @@ public class Agendamento {
         this.idagendamento = idagendamento;
     }
 
-    public LocalDateTime getDataHorario() {
-        return dataHorario;
+    public LocalDateTime getDatahorario() {
+        return datahorario;
     }
 
-    public void setDataHorario(LocalDateTime datahorario) {
-        this.dataHorario = datahorario;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setDatahorario(LocalDateTime datahorario) {
+        this.datahorario = datahorario;
     }
 
     public String getDescricao() {
@@ -82,6 +74,14 @@ public class Agendamento {
         this.descricao = descricao;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public Tratamento getTratamento() {
         return tratamento;
     }
@@ -90,14 +90,23 @@ public class Agendamento {
         this.tratamento = tratamento;
     }
 
-   /* public List<Agendamento> getItens() {
-        return itens;
+    public Profissional getProfissional() {
+        return profissional;
     }
 
-    public void setItens(List<Agendamento> itens) {
-        this.itens = itens;
-    }*/
+    public void setProfissional(Profissional profissional) {
+        this.profissional = profissional;
+    }
 
-  
-    
+    @Override
+    public String toString() {
+        return "Agendamento{" +
+                "idagendamento=" + idagendamento +
+                ", datahorario=" + datahorario +
+                ", descricao='" + descricao + '\'' +
+                ", usuario=" + (usuario != null ? usuario.getIdusuario() : null) +
+                ", tratamento=" + (tratamento != null ? tratamento.getIdtratamento() : null) +
+                ", profissional=" + (profissional != null ? profissional.getIdprofissional() : null) +
+                '}';
+    }
 }

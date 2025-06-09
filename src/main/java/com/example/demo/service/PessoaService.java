@@ -5,20 +5,21 @@ import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.model.Pessoa;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.PessoaRepository;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PessoaService {
 
     @Autowired
     private PessoaRepository pessoaRepository;
-    
-     @Autowired
+
+    @Autowired
     private UsuarioService usuarioService;
-    
+
 
     public PessoaDTO buscarPorId(Long id) {
         Optional<Pessoa> optional = pessoaRepository.findByIdWithUsuario(id);
@@ -40,7 +41,7 @@ public class PessoaService {
 
     public Pessoa atualizar(Long id, PessoaDTO pessoaDTO) {
         Pessoa pessoa = pessoaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada com ID: " + id));
 
         // Atualizar os campos
         pessoa.setCpf(pessoaDTO.getCpf());
@@ -56,9 +57,11 @@ public class PessoaService {
         pessoa.setContatoemergencia(pessoaDTO.getContatoemergencia());
         pessoa.setNomecontatoemergencia(pessoaDTO.getNomecontatoemergencia());
         pessoa.setContatopreferencial(pessoaDTO.getContatopreferencial());
+        if (pessoaDTO.getIdusuario() != null){
         UsuarioDTO usuario = usuarioService.buscarPorId(pessoaDTO.getIdusuario());
-        if (usuario != null){
+        if (usuario != null) {
             pessoa.setUsuario(new Usuario(usuario));
+        }
         }
 
         return pessoaRepository.saveAndFlush(pessoa);
@@ -84,7 +87,7 @@ public class PessoaService {
         dto.setIdusuario(pessoa.getUsuario().getIdusuario());
         dto.setUsername(pessoa.getUsuario().getUsername());
 
-        
+
         return dto;
     }
 
@@ -105,10 +108,12 @@ public class PessoaService {
         pessoa.setContatoemergencia(dto.getContatoemergencia());
         pessoa.setNomecontatoemergencia(dto.getNomecontatoemergencia());
         pessoa.setContatopreferencial(dto.getContatopreferencial());
-        Usuario usuario = new Usuario();
-        usuario.setIdusuario(dto.getIdusuario());
-        usuario.setLogin(dto.getUsername());
-
+        if (dto.getIdusuario ()!= null){
+            Usuario usuario = new Usuario();
+            usuario.setIdusuario(dto.getIdusuario());
+            usuario.setLogin(dto.getUsername());
+            pessoa.setUsuario(usuario);
+        }
         return pessoa;
     }
 }

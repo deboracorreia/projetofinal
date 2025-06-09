@@ -4,20 +4,20 @@
  */
 package com.example.demo.service;
 
+import com.example.demo.dto.AgendamentoResumoDTO;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.dto.UsuarioLoginDTO;
 import com.example.demo.dto.UsuarioLoginResponseDTO;
-import com.example.demo.model.Pessoa;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
-import java.util.List;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
- *
  * @author debora
  */
 
@@ -26,10 +26,11 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+    @Autowired
+    private AgendamentoService agendamentoService;
+
     public UsuarioLoginResponseDTO cadastrar(UsuarioLoginDTO usuarioDTO) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findByLogin(usuarioDTO.getLogin());
 
@@ -71,7 +72,12 @@ public class UsuarioService {
     }
 
     public void excluir(Long id) {
-        usuarioRepository.delete(new Usuario(id));
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não existe."));
+        List<AgendamentoResumoDTO> agendamentos = agendamentoService.buscarPorUsuarioDTO(usuario.getIdusuario());
+        if (!agendamentos.isEmpty()) {
+            throw new RuntimeException("Usuário não pode ser removido pois há agendamentos vinculados.");
+        }
+        usuarioRepository.delete(usuario);
     }
 
     public Usuario salvar(UsuarioLoginDTO usuarioLoginDto) {
@@ -80,7 +86,7 @@ public class UsuarioService {
 
     public Usuario atualizar(Long id, UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
         usuario.setLogin(usuarioDTO.getLogin());
         usuario.setTipo(usuarioDTO.getTipo());
         return usuarioRepository.saveAndFlush(usuario);
